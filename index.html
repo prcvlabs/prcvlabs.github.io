@@ -120,6 +120,12 @@ h1 { font: italic 400 clamp(2.6rem, 6.5vw, 3.9rem)/1.08 var(--display); color: v
 .funding + .funding { margin-top: 0; }
 .funding + .precursor { margin-top: 3rem; }
 
+
+/* ---------- demo videos ---------- */
+figure.demo video { display: block; width: 100%; height: auto; background: #0b1a2e; }
+figure.demo.hero { max-width: var(--wide); margin: 2.5rem auto 3rem; }
+figure.demo + figure.demo { margin-top: 0; }
+
 /* ---------- report body ---------- */
 .report { padding: 0 0 1rem; }
 .report-date { margin-top: 4rem; margin-bottom: 1.4rem; padding-top: 2.25rem; border-top: 1px solid var(--rule); }
@@ -217,6 +223,9 @@ dialog.lightbox button { position: fixed; top: 1rem; right: 1rem; width: 2.75rem
       <h2 id="funding-h">Funding</h2>
       <p>This work was supported by the U.S. National Science Foundation under SBIR Phase I Award <a href="https://www.nsf.gov/awardsearch/show-award?AWD_ID=1622082">No. 1622082</a> and SBIR Phase II Award <a href="https://www.nsf.gov/awardsearch/show-award?AWD_ID=1738492">No. 1738492</a>, <i>Large-Scale Behavioral Analysis Utilizing Convolutional Neural Networks and Its Application to In-store Retail Marketing</i>, Everett Berry, Principal Investigator.</p>
     </section>
+    <figure class="demo hero"><video autoplay loop muted playsinline preload="metadata" poster="media/mission-control-poster.webp"><source src="media/mission-control.webm" type="video/webm"><source src="media/mission-control.mp4" type="video/mp4"></video>
+<figcaption><span class="fig-label">Demo</span> multiview tracking two people across two stereo cameras: track IDs and skeletons in each view, and a top-down floor map with each person’s trail and facing direction. Rendered in 2026 from the open-source code; faces are blurred.</figcaption>
+</figure>
     <section class="precursor" id="precursor" aria-labelledby="precursor-h">
       <h2 id="precursor-h"><span class="num">0.</span>Prior Work at Purdue University</h2>
       <p>Perceive grew out of research Everett Berry did with <a href="https://yhlu.net/">Prof. Yung-Hsiang Lu</a> at Purdue University on CAM<sub>2</sub> (Continuous Analysis of Many CAMeras). CAM<sub>2</sub> was a cloud system for collecting and analyzing imagery from tens of thousands of public network cameras around the world. Running computer vision across that many cameras at once laid the groundwork for the retail analytics in the reports below.</p>
@@ -299,6 +308,9 @@ dialog.lightbox button { position: fixed; top: 1rem; right: 1rem; width: 2.75rem
 <figure><a class="zoom" href="images/fig04.webp" aria-label="Enlarge figure"><img src="images/fig04.webp" alt="An image with segmented superpixels on bodies." width="928" height="579" loading="lazy" decoding="async"></a>
 <figcaption><span class="fig-label">Figure 4</span> <em>An image with segmented superpixels on bodies.</em></figcaption>
 </figure>
+<figure class="demo"><video autoplay loop muted playsinline preload="metadata" poster="media/superpixels-depth-poster.webp"><source src="media/superpixels-depth.webm" type="video/webm"><source src="media/superpixels-depth.mp4" type="video/mp4"></video>
+<figcaption><span class="fig-label">Demo</span> SLIC superpixels and stereo disparity on a Perceive office camera, recomputed in 2026 from the original recordings. Faces are blurred.</figcaption>
+</figure>
 <p>Pose estimation, or estimating the configuration of a person’s body within a single frame, is the last task before action recognition. A neural network pipeline to determine the pose of a person has two components: (1) it recognizes person keypoints, e.g. elbows, shoulders, and knees and (2) it intelligently links those person keypoints into a pose. For example, it must connect the left hip to the left shoulder else a deformed pose is produced. Pose estimation may also be used to eliminate a large portion of occlusion instances (cases where two or more people overlap in an image from a single viewpoint). Occlusion is a very difficult problem in computer vision that wreaks havoc on tracking algorithms when not properly addressed. The ability to identify person keypoints on individual blobs allows the tracker to better separate targets which are heavily occluded. A dataset of person keypoints is needed for a neural network to recognize them. To assemble this dataset, we start with a web tool that shows users “super-pixeled” images. Super pixel algorithms divide an image into many small regions (called super pixels) that are defined by edges and lighting changes (Figure 4). To train our keypoint detection network we combine these super pixels into segments and feed them to the network. The number of training images required for high accuracy is very large, on the order of 50,000 and the team cannot label all of these images ourselves. To quickly produce this training data at scale we enlist a task service where users are paid per image they segment and tag. These tasks are randomly populated with a small set of ground truth images labeled by us as well as a set of duplicate, untagged images where labeled results are cross validated for the purpose of checking task-doers work. Although this labeling mechanism is in place, we have not yet used the task service at a large scale to create the keypoints dataset.</p>
 <figure><a class="zoom" href="images/fig05.webp" aria-label="Enlarge figure"><img src="images/fig05.webp" alt="(a - c) A “shopper enter” action shown in three sequential frames. (d - f) A “shopper exit” action in sequential frames. In each frame the shopper in question has been segmented from the background in blue." width="1427" height="651" loading="lazy" decoding="async"></a>
 <figcaption><span class="fig-label">Figure 5</span> <em>(a - c) A “shopper enter” action shown in three sequential frames. (d - f) A “shopper exit” action in sequential frames. In each frame the shopper in question has been segmented from the background in blue.</em></figcaption>
@@ -321,6 +333,9 @@ dialog.lightbox button { position: fixed; top: 1rem; right: 1rem; width: 2.75rem
 <p>In light of these obstacles, we re-evaluated one of our two original hardware options: using stereo cameras. If side-view angles could be occluded and three physical cameras were now required for most points in the store, two physical cameras on an overhead stereo rig would obviously be better – but the rig must be able cover at least as many areas of the store as the three camera setup and “see around” obstacles. For this we can use wide-angle lenses, increasing our viewing angle by almost a factor of two, but adding significant distortion to the edge of the frame. The last piece was to ensure the availability of these parts and Perceive’s ability to manufacture one to two hundred devices with them. Fortunately, the hardware ecosystem surrounding our original platform has evolved significantly such that vendors and build processes are available now for all necessary components. In software, stereo offered a critical advantage versus the three view setup in that depth information is available natively. The interest point algorithm was no longer necessary and all operations can be done directly on pixels. This means that 3D location information is now produced faster <em>and</em> more accurately. This is only possible with excellent distortion correction (Figure 9) and stereo calibration, two cornerstone technologies that took us from the summer through to the end of the Phase I grant period to perfect.</p>
 <figure><a class="zoom" href="images/fig09.webp" aria-label="Enlarge figure"><img src="images/fig09.webp" alt="(a) Wide-angle lens which produces a distorted image with a very large field of view (b) View after distortion correction is applied" width="879" height="364" loading="lazy" decoding="async"></a>
 <figcaption><span class="fig-label">Figure 9</span> <em>(a) Wide-angle lens which produces a distorted image with a very large field of view (b) View after distortion correction is applied</em></figcaption>
+</figure>
+<figure class="demo"><video autoplay loop muted playsinline preload="metadata" poster="media/fisheye-unwarp-poster.webp"><source src="media/fisheye-unwarp.webm" type="video/webm"><source src="media/fisheye-unwarp.mp4" type="video/mp4"></video>
+<figcaption><span class="fig-label">Demo</span> The polynomial lens model straightening a wide-angle frame, then the ArUco calibration cube, rendered in 2026 from Perceive calibration data.</figcaption>
 </figure>
 <p>The importance of Technical Objective 2 to the most basic product functions was surprising and the team shifted resources rapidly as it became clear. Progress has been steady and we have been able to successfully triangulate the locations of shoppers in retail stores as described in our Phase I proposal. At first, we employed a shortcut in our use of tracks and detections and did not directly compute a dense point cloud from each camera view. In doing so the desired result was achieved for an initial prototype which provided us with critical customer feedback. Later, it was discovered that this shortcut was insufficient for a realistic production setting and robust full-store tracking, and the algorithms in Technical Objective 2 were re-engineered. Technical Objective 2 has now been completed with the development of a multi-camera system which can discern the exact distances between objects in a scene.</p>
 <h3 id="february-2017-technical-objective-3-design-and-deploy-completely-cordless-">Technical Objective 3: Design and deploy completely cordless camera modules.</h3>
@@ -531,6 +546,13 @@ dialog.lightbox button { position: fixed; top: 1rem; right: 1rem; width: 2.75rem
   // close mobile contents after choosing a link
   document.querySelectorAll('details.toc a').forEach(a =>
     a.addEventListener('click', () => a.closest('details').open = false));
+
+  // respect reduced motion: no autoplaying demo videos
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('figure.demo video').forEach(v => {
+      v.removeAttribute('autoplay'); v.pause(); v.controls = true;
+    });
+  }
 
   // figure lightbox
   const dlg = document.querySelector('dialog.lightbox');
