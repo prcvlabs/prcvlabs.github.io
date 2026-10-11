@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}} · Perceive Labs</title>
+<meta name="description" content="The research history behind Perceive: retail video analytics, multi-view geometry, and cordless camera hardware, {{YEARS}}.">
+<meta property="og:title" content="{{TITLE}} · Perceive Labs">
+<meta property="og:description" content="The research history behind Perceive, {{YEARS}}.">
+<meta property="og:type" content="article">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2310253f'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='white' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+/* Michelangelus ships with Microsoft Office and has no public web-font license,
+   so it is only used when installed locally; everyone else gets the italic serif. */
+@font-face { font-family: "Michelangelus Local"; src: local("Michelangelus"), local("Michelangelus Regular"); font-display: swap; }
+:root {
+  --ink: #1c2430;
+  --muted: #4f5b6b;
+  --faint: #7c8796;
+  --rule: #d9dde3;
+  --paper: #fdfcf8;
+  --navy: #10253f;
+  --blue: #2e86db;         /* Perceive brand blue (perceiveinc.com, 2017–18) */
+  --link: #1f6fb8;         /* same hue, darkened to meet WCAG AA on paper */
+  --serif: "STIX Two Text", "Times New Roman", Times, serif;
+  --display: "Michelangelus Local", "STIX Two Text", Georgia, serif;
+  --measure: 38rem;
+  --wide: 48rem;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 1.5rem; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 400 1.1875rem/1.62 var(--serif);
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  font-kerning: normal; text-rendering: optimizeLegibility;
+}
+a { color: var(--link); text-decoration-color: color-mix(in srgb, var(--link) 40%, transparent); text-underline-offset: .16em; text-decoration-thickness: .05em; }
+a:hover { text-decoration-color: var(--link); }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 2px; }
+.sc { font-variant: all-small-caps; letter-spacing: .06em; }
+
+.skip { position: absolute; left: 1rem; top: -4rem; z-index: 100; background: var(--navy); color: #fff;
+  padding: .55rem 1rem; border-radius: .25rem; font-size: .95rem; text-decoration: none; }
+.skip:focus { top: 1rem; }
+
+#progress { position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 50;
+  background: var(--blue); transform-origin: 0 50%; transform: scaleX(0); }
+
+/* ---------- layout ---------- */
+.shell { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 74rem; margin: 0 auto; padding: 0 1.25rem; }
+@media (min-width: 70rem) {
+  .shell { grid-template-columns: 14rem minmax(0, 1fr); gap: 4.5rem; padding: 0 2rem; }
+}
+main { max-width: var(--wide); width: 100%; margin: 0 auto; }
+main > *, .report > *, .precursor > * { max-width: var(--measure); margin-left: auto; margin-right: auto; }
+main figure, .report figure { max-width: var(--wide); }
+
+/* ---------- table of contents ---------- */
+.toc { font-size: .95rem; line-height: 1.4; }
+.toc li { text-align: left; }
+.toc-title { font-variant: all-small-caps; letter-spacing: .1em; color: var(--faint); margin: 0 0 .9rem; font-size: 1rem; }
+.toc ol { list-style: none; margin: 0; padding: 0; }
+.toc > nav > ol { counter-reset: rep; }
+.toc > nav > ol > li { margin: 0 0 .55rem; counter-increment: rep; }
+.toc > nav > ol > li > a { color: var(--navy); font-weight: 600; }
+.toc > nav > ol > li > a::before { content: counter(rep, upper-roman) "."; display: inline-block; min-width: 2.1em; color: var(--faint); font-weight: 400; }
+.toc ol ol { margin: .3rem 0 .45rem .15rem; border-left: 1px solid var(--rule); }
+.toc ol ol a { display: block; padding: .16rem 0 .16rem .8rem; color: var(--muted); margin-left: -1px; border-left: 2px solid transparent; font-size: .9rem; }
+.toc a { text-decoration: none; }
+.toc a:hover { color: var(--link); }
+.toc a[aria-current="true"] { color: var(--link); border-left-color: var(--blue); }
+.toc .toc-pre { display: block; margin: 0 0 .8rem; color: var(--navy); font-weight: 600; }
+.toc .toc-post { margin: .8rem 0 0; }
+aside.toc { display: none; }
+@media (min-width: 70rem) {
+  aside.toc { display: block; position: sticky; top: 0; align-self: start; max-height: 100vh; overflow-y: auto;
+    padding: 3.5rem .5rem 3rem 0; overscroll-behavior: contain; }
+  details.toc { display: none; }
+}
+details.toc { margin: 0 auto 2.5rem; max-width: var(--measure); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+details.toc summary { cursor: pointer; padding: .75rem 0; font-variant: all-small-caps; letter-spacing: .1em; color: var(--navy); }
+details.toc nav { padding: 0 0 1rem; }
+
+/* ---------- title block ---------- */
+.masthead { padding: 5.5rem 0 2.25rem; text-align: center; }
+.masthead p { text-align: center; }
+.brand { font-variant: all-small-caps; letter-spacing: .18em; color: var(--blue); margin: 0 0 1.4rem; font-size: 1.05rem; font-weight: 600; }
+h1 { font: italic 400 clamp(2.6rem, 6.5vw, 3.9rem)/1.08 var(--display); color: var(--navy); margin: 0 0 1.1rem; letter-spacing: -.005em; }
+.byline { margin: 0; color: var(--muted); font-size: 1.02rem; }
+.byline .sep { color: var(--blue); padding: 0 .5em; }
+.masthead::after { content: ""; display: block; width: 3.5rem; height: 2px; background: var(--blue); margin: 2.2rem auto 0; }
+
+.abstract { margin-bottom: 3rem; font-size: 1.04rem; line-height: 1.58; }
+.abstract p { margin: 0; }
+.abstract .label { font-variant: all-small-caps; letter-spacing: .12em; font-weight: 600; color: var(--navy); margin-right: .5em; }
+
+/* ---------- prior work (bibliography) ---------- */
+.precursor { margin: 0 auto 1.5rem; }
+.precursor h2, .report-date { font: 600 1.45rem/1.25 var(--serif); color: var(--navy); }
+.precursor h2 { margin: 0 0 .9rem; }
+.precursor h2 .num, .report-date .num { color: var(--blue); font-weight: 400; margin-right: .45em; }
+.refs { list-style: none; padding: 0; margin: 1.6rem auto 0; counter-reset: ref; font-size: 1rem; line-height: 1.5; }
+.refs li { counter-increment: ref; position: relative; padding-left: 2.6rem; margin-bottom: 1.15rem; }
+.refs li::before { content: "[" counter(ref) "]"; position: absolute; left: 0; color: var(--faint); font-variant-numeric: lining-nums; }
+.refs .authors b { font-weight: 600; color: var(--navy); }
+.refs .rtitle { font-style: normal; }
+.refs .venue { font-style: italic; }
+.refs .doi { font-size: .88rem; font-variant-numeric: lining-nums; overflow-wrap: anywhere; }
+.refs .note { display: block; color: var(--muted); font-size: .94rem; margin-top: .2rem; }
+
+/* ---------- funding acknowledgment ---------- */
+.funding { margin: 0 auto 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); font-size: .98rem; line-height: 1.55; color: var(--muted); }
+.funding h2 { font: 400 1rem var(--serif); font-variant: all-small-caps; letter-spacing: .14em; color: var(--navy); margin: 0 0 .4rem; font-weight: 600; }
+
+.funding + .funding { margin-top: 0; }
+.funding + .precursor { margin-top: 3rem; }
+
+
+/* ---------- demo videos ---------- */
+figure.demo video { display: block; width: 100%; height: auto; background: #0b1a2e; }
+figure.demo.hero { max-width: var(--wide); margin: 2.5rem auto 3rem; }
+figure.demo + figure.demo { margin-top: 0; }
+
+/* ---------- report body ---------- */
+.report { padding: 0 0 1rem; }
+.report-date { margin-top: 4rem; margin-bottom: 1.4rem; padding-top: 2.25rem; border-top: 1px solid var(--rule); }
+.report-date .eyebrow { display: block; font: 400 1rem var(--serif); font-variant: all-small-caps; letter-spacing: .14em; color: var(--faint); margin-bottom: .2rem; }
+h3 { font: italic 600 1.2rem/1.35 var(--serif); color: var(--navy); margin-top: 2.2rem; margin-bottom: .55rem; }
+p { margin: 0 0 .9em; overflow-wrap: break-word; }
+/* book-style paragraphs: first-line indent, no gap between consecutive paragraphs */
+.report p { margin-bottom: 0; }
+.report p + p { text-indent: 1.4em; }
+.report p:has(+ :not(p)) { margin-bottom: 1em; }
+ol, ul { padding-left: 1.5em; margin: .5em auto 1em; }
+li { margin-bottom: .4em; }
+li::marker { color: var(--blue); }
+strong { font-weight: 600; }
+sub, sup { line-height: 0; }
+
+figure { margin: 2rem auto 2.25rem; padding: 1.1rem 0 0; border-top: 1px solid var(--rule); }
+figure .zoom { display: block; cursor: zoom-in; }
+figure img { display: block; max-width: 100%; height: auto; margin: 0 auto; background: #fff; transition: opacity .2s ease; }
+figure .zoom:hover img { opacity: .92; }
+figcaption { font-size: .93rem; line-height: 1.5; color: var(--muted); margin: .85rem auto 0; max-width: var(--measure);
+  padding-bottom: 1rem; border-bottom: 1px solid var(--rule); }
+figcaption em { font-style: normal; }
+.fig-label { font-variant: all-small-caps; letter-spacing: .08em; font-weight: 600; color: var(--navy); margin-right: .2em; }
+
+.redacted { font-family: system-ui, sans-serif; color: var(--ink); letter-spacing: -.12em; padding-right: .12em; user-select: none; cursor: help; font-size: .9em; }
+
+footer { margin: 4rem auto 0; padding: 1.5rem 0 4rem; border-top: 1px solid var(--rule); font-size: .92rem; color: var(--faint);
+  display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-variant: all-small-caps; letter-spacing: .08em; }
+footer a { color: var(--muted); }
+
+/* ---------- lightbox ---------- */
+dialog.lightbox { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 94vh; }
+dialog.lightbox::backdrop { background: rgba(16,37,63,.9); }
+dialog.lightbox img { display: block; max-width: 96vw; max-height: 94vh; width: auto; height: auto; background: #fff; cursor: zoom-out; }
+dialog.lightbox button { position: fixed; top: 1rem; right: 1rem; width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 0;
+  background: #fff; color: var(--navy); font: 400 1.6rem/1 var(--serif); cursor: pointer; }
+
+/* ---------- small screens ---------- */
+@media (max-width: 40rem) {
+  body { font-size: 1.08rem; line-height: 1.58; }
+  .masthead { padding-top: 3.5rem; }
+  .refs li { padding-left: 2.2rem; }
+}
+
+/* ---------- follow system accessibility settings ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  #progress { display: none; }
+}
+@media (prefers-contrast: more) {
+  :root { --ink: #000; --muted: #1d1d1d; --faint: #333; --rule: #6b6b6b; --paper: #fff; --link: #0b4f8a; --blue: #0b4f8a; }
+  a { text-decoration-color: currentColor; text-decoration-thickness: .1em; }
+  .toc a { text-decoration: underline; }
+}
+@media (forced-colors: active) {
+  #progress { display: none; }
+  .redacted { forced-color-adjust: none; color: CanvasText; }
+  .toc a[aria-current="true"] { border-left-color: Highlight; }
+}
+@media print {
+  aside.toc, details.toc, #progress, .skip, dialog { display: none !important; }
+  body { background: #fff; font-size: 11pt; }
+  figure { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div id="progress" aria-hidden="true"></div>
+<div class="shell">
+  <aside class="toc" aria-label="Contents">
+    <p class="toc-title">Contents</p>
+    <nav>{{TOC}}</nav>
+  </aside>
+  <main id="content">
+    <header class="masthead">
+      <p class="brand">{{BRAND}}</p>
+      <h1>{{TITLE}}</h1>
+      <p class="byline">{{BYLINE}}</p>
+    </header>
+{{ABSTRACT}}
+    <details class="toc">
+      <summary>Contents</summary>
+      <nav aria-label="Contents">{{TOC}}</nav>
+    </details>
+{{CONTENT}}
+    <footer>
+      <span>Perceive Labs · prcvlabs.org</span>
+      <a href="#content">Back to top ↑</a>
+    </footer>
+  </main>
+</div>
+
+<dialog class="lightbox" aria-label="Enlarged figure">
+  <button type="button" aria-label="Close">×</button>
+  <img alt="">
+</dialog>
+
+<script>
+(() => {
+  // reading progress
+  const bar = document.getElementById('progress');
+  let ticking = false;
+  const update = () => {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    bar.style.transform = `scaleX(${max > 0 ? h.scrollTop / max : 0})`;
+    ticking = false;
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+
+  // highlight current section in the sidebar
+  const side = document.querySelector('aside.toc');
+  const links = side ? [...side.querySelectorAll('a[href^="#"]')] : [];
+  const targets = links.map(a => document.getElementById(a.hash.slice(1))).filter(Boolean);
+  if (targets.length && 'IntersectionObserver' in window) {
+    let current = null;
+    const setCurrent = id => {
+      if (id === current) return;
+      current = id;
+      links.forEach(a => a.removeAttribute('aria-current'));
+      const a = links.find(a => a.hash === '#' + id);
+      if (a) {
+        a.setAttribute('aria-current', 'true');
+        const top = a.closest('nav > ol > li')?.querySelector(':scope > a');
+        if (top && top !== a) top.setAttribute('aria-current', 'true');
+        const r = a.getBoundingClientRect(), sr = side.getBoundingClientRect();
+        if (r.top < sr.top + 40 || r.bottom > sr.bottom - 40) a.scrollIntoView({ block: 'center', behavior: 'instant' });
+      }
+    };
+    const io = new IntersectionObserver(() => {
+      let best = targets[0];
+      for (const t of targets) { if (t.getBoundingClientRect().top < innerHeight * 0.3) best = t; }
+      setCurrent(best.id);
+    }, { rootMargin: '0px 0px -60% 0px', threshold: [0, 1] });
+    targets.forEach(t => io.observe(t));
+  }
+
+  // close mobile contents after choosing a link
+  document.querySelectorAll('details.toc a').forEach(a =>
+    a.addEventListener('click', () => a.closest('details').open = false));
+
+  // respect reduced motion: no autoplaying demo videos
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('figure.demo video').forEach(v => {
+      v.removeAttribute('autoplay'); v.pause(); v.controls = true;
+    });
+  }
+
+  // figure lightbox
+  const dlg = document.querySelector('dialog.lightbox');
+  if (dlg && dlg.showModal) {
+    const img = dlg.querySelector('img');
+    let opener = null;
+    document.querySelectorAll('figure .zoom').forEach(a => a.addEventListener('click', e => {
+      e.preventDefault();
+      opener = a;
+      const src = a.querySelector('img');
+      img.src = a.href; img.alt = src.alt;
+      dlg.showModal();
+    }));
+    dlg.addEventListener('click', () => dlg.close());
+    dlg.addEventListener('close', () => opener && opener.focus());
+  }
+})();
+</script>
+</body>
+</html>
